@@ -58,3 +58,54 @@ the gems in your Gemfile, which may resolve the conflict.
 
 またエラー…`bundle update`で解消するかな？
 その後もう一度`bundle install`してみる。→いけたみたい
+
+Railsサーバーを実行する→`rails server`
+[Preview]>[Preview Running Application]を選択
+出てきたブラウザの右上の矢印マーク[Pop Out into New Window]をクリック
+Railsのデフォルトページが表示された
+![](rails_default.JPG)
+
+MVCのお勉強
+いまはコントローラーは一つしかない
+```
+$ ls app/controllers/*_controller.rb
+app/controllers/application_controller.rb
+```
+
+Applicationコントローラにhello関数を定義
+
+ルーターのルーティングを変更
+
+デフォルトページでhello worldが表示された
+
+gitのセットアップ
+
+ユーザー名とメアドの設定
+初めてのコミット
+うっかり削除したときのリカバリー
+
+Bitbucketへのアップロード
+(デフォルトですべてのリポジトリがprivateなので、GithubでなくBitbucketを採用している)
+
+cloud9上でssh鍵作成
+> https://git-scm.com/book/ja/v2/Git%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC-SSH-%E5%85%AC%E9%96%8B%E9%8D%B5%E3%81%AE%E4%BD%9C%E6%88%90
+
+BitBucketにssh鍵を登録
+
+新しいリポジトリ作成
+初めてのpush
+
+modify-READMEブランチを作成
+(一時的なブランチ＝トピックブランチ)
+
+README.mdを編集
+cloud9上でもVSCodeみたいに[Preview]からマークダウンのプレビューが見れる
+
+`git commit -a`でaddとcommitを同時にできる
+
+`git branch -d`でmpdify-READMEブランチを削除
+`-D`オプションで、変更をマージしていなくてもブランチを削除できる
+
+変更をpush
+
+Herokuにデプロイする
