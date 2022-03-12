@@ -109,3 +109,91 @@ cloud9上でもVSCodeみたいに[Preview]からマークダウンのプレビ�
 変更をpush
 
 Herokuにデプロイする
+
+Heroku用にGemfileを編集  
+HerokuではSQLiteがサポートされていないため、本番環境ではポスグレを使う
+
+HerokuCLIをインストール
+```
+$ heroku --version ›   Warning: Our terms of service have changed: 
+ ›   https://dashboard.heroku.com/terms-of-service
+heroku/7.59.4 linux-x64 node-v12.21.0
+```
+
+Herokuログイン  
+interactiveオプションならブラウザを開かずにログインできる  
+その際はダッシュボードで生成したトークンが必要（結局ブラウザにアクセスしてる…）
+
+Herokuアプリ作成  
+pushに失敗…
+> https://qiita.com/jnchito/items/c3035cc49a9cef053549
+ここにあるのとは別のエラーっぽい
+```bash
+remote: -----> Installing node-v16.13.1-linux-x64
+remote: -----> Detecting rake tasks
+remote: -----> Preparing app for Rails asset pipeline
+remote:        Running: rake assets:precompile
+remote:        rake aborted!
+remote:        ArgumentError: wrong number of arguments (given 3, expected 2)
+remote:        /tmp/build_27737d5f/vendor/bundle/ruby/3.0.0/gems/actionpack-5.1.6/lib/action_dispatch/middleware/static.rb:109:in `initialize'
+remote:        /tmp/build_27737d5f/vendor/bundle/ruby/3.0.0/gems/actionpack-5.1.6/lib/action_dispatch/middleware/stack.rb:35:in `new'
+remote:        /tmp/build_27737d5f/vendor/bundle/ruby/3.0.0/gems/actionpack-5.1.6/lib/action_dispatch/middleware/stack.rb:35:in `build'
+remote:        /tmp/build_27737d5f/vendor/bundle/ruby/3.0.0/gems/actionpack-5.1.6/lib/action_dispatch/middleware/stack.rb:99:in `block in build'
+remote:        /tmp/build_27737d5f/vendor/bundle/ruby/3.0.0/gems/actionpack-5.1.6/lib/action_dispatch/middleware/stack.rb:99:in `each'
+remote:        /tmp/build_27737d5f/vendor/bundle/ruby/3.0.0/gems/actionpack-5.1.6/lib/action_dispatch/middleware/stack.rb:99:in `inject'
+remote:        /tmp/build_27737d5f/vendor/bundle/ruby/3.0.0/gems/actionpack-5.1.6/lib/action_dispatch/middleware/stack.rb:99:in `build'
+remote:        /tmp/build_27737d5f/vendor/bundle/ruby/3.0.0/gems/railties-5.1.6/lib/rails/engine.rb:508:in `block in app'
+remote:        /tmp/build_27737d5f/vendor/bundle/ruby/3.0.0/gems/railties-5.1.6/lib/rails/engine.rb:504:in `synchronize'
+remote:        /tmp/build_27737d5f/vendor/bundle/ruby/3.0.0/gems/railties-5.1.6/lib/rails/engine.rb:504:in `app'
+remote:        /tmp/build_27737d5f/vendor/bundle/ruby/3.0.0/gems/railties-5.1.6/lib/rails/application/finisher.rb:45:in `block in <module:Finisher>'
+remote:        /tmp/build_27737d5f/vendor/bundle/ruby/3.0.0/gems/railties-5.1.6/lib/rails/initializable.rb:30:in `instance_exec'
+remote:        /tmp/build_27737d5f/vendor/bundle/ruby/3.0.0/gems/railties-5.1.6/lib/rails/initializable.rb:30:in `run'
+remote:        /tmp/build_27737d5f/vendor/bundle/ruby/3.0.0/gems/railties-5.1.6/lib/rails/initializable.rb:59:in `block in run_initializers'
+remote:        /tmp/build_27737d5f/vendor/bundle/ruby/3.0.0/gems/railties-5.1.6/lib/rails/initializable.rb:58:in `run_initializers'
+remote:        /tmp/build_27737d5f/vendor/bundle/ruby/3.0.0/gems/railties-5.1.6/lib/rails/application.rb:353:in `initialize!'
+remote:        /tmp/build_27737d5f/config/environment.rb:5:in `<top (required)>'
+remote:        /tmp/build_27737d5f/vendor/bundle/ruby/3.0.0/gems/railties-5.1.6/lib/rails/application.rb:329:in `require'
+remote:        /tmp/build_27737d5f/vendor/bundle/ruby/3.0.0/gems/railties-5.1.6/lib/rails/application.rb:329:in `require_environment!'
+remote:        /tmp/build_27737d5f/vendor/bundle/ruby/3.0.0/gems/railties-5.1.6/lib/rails/application.rb:445:in `block in run_tasks_blocks'
+remote:        /tmp/build_27737d5f/vendor/bundle/ruby/3.0.0/gems/sprockets-rails-3.2.2/lib/sprockets/rails/task.rb:61:in `block (2 levels) in define'
+remote:        Tasks: TOP => environment
+remote:        (See full trace by running task with --trace)
+remote: 
+remote:  !
+remote:  !     Precompiling assets failed.
+remote:  !
+remote:  !     Push rejected, failed to compile Ruby app.
+remote: 
+remote:  !     Push failed
+remote: Verifying deploy...
+remote: 
+remote: !       Push rejected to mighty-plains-78424.
+remote: 
+To https://git.heroku.com/mighty-plains-78424.git
+ ! [remote rejected] master -> master (pre-receive hook declined)
+error: failed to push some refs to 'https://git.heroku.com/mighty-plains-78424.git'
+```
+
+rubyのバージョンは指定していないので、自動で3.0.3が使われている  
+ローカルの環境もそれに合わせてみる  
+`sudo apt install rbenv`
+`rbenv install --list`
+3.0.3がないんですが…  
+rbenvのバージョン確認
+```
+$ rbenv -v
+rbenv 1.0.0
+```
+なんか古そう
+
+aptのupgradeをしてみる→最新の状態だと出る…
+
+
+https://qiita.com/jnchito/items/c3035cc49a9cef053549 によると、Herokuでサポートしているバージョンが決まっているらしい
+> https://devcenter.heroku.com/articles/ruby-support#supported-runtimes
+
+Gemfileで指定しない場合、勝手に3.0.3がインストールされるのでは？  
+手元の環境とGemfile上で2.6.9を指定してみる→デプロイできた！
+
+Herokuのアプリ名を変えてみる
+
